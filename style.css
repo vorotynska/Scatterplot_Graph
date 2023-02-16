@@ -1,0 +1,21 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+svg{
+    background-color: #DEEFE7;
+    box-shadow: 3px 5px 15px #193C40;
+    border-radius: 5px;
+    z-index: 3;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #333;
+}
+
+
+.axis text { 
+    font: 10px Verdana;
+}
