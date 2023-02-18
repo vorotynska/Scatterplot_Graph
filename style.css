@@ -1,11 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
+
+*{
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+html{
+    height: 100%
+}
 body {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
+    background-color: #D7D9D9;
 }
 
 svg{
-    background-color: #DEEFE7;
+    background-color: #F2F2F2;
     box-shadow: 3px 5px 15px #193C40;
     border-radius: 5px;
     z-index: 3;
@@ -19,3 +31,17 @@ svg{
 .axis text { 
     font: 10px Verdana;
 }
+#tooltip{
+    z-index: 10;
+      background-color: #B6B9F2;
+    border-radius: 5px;
+    padding: 5px;
+   visibility: hidden;
+   text-align: center;
+   vertical-align: middle;
+   position: absolute;
+   color: #262625;
+}
+#title{
+    color: #1B4001;
+  }

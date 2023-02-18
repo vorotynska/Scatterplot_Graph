@@ -12,7 +12,7 @@ var svg = d3.select("svg")
     .attr("width", width)
     .attr("height", height)
 
-let tooltip = d3.select('#tooltip')
+
 /*  {
     "Time": "39:50",
     "Place": 35,
@@ -23,7 +23,15 @@ let tooltip = d3.select('#tooltip')
     "Doping": "",
     "URL": ""
   }*/
-
+const a = [{
+        doping: 'No doping allegations',
+        color: '#5A7302'
+    },
+    {
+        doping: 'Riders with doping allegations',
+        color: "#F23827"
+    }
+]
 
 req.open('GET', url, true)
 req.onload = () => {
@@ -67,6 +75,12 @@ req.onload = () => {
         .attr('id', 'y-axis')
         .attr('transform', 'translate(' + padding + ', 0)')
 
+    const tooltip = d3.select('body')
+        .append('div')
+        .attr('id', 'tooltip')
+        .style("visibility", "hidden")
+
+
     svg.selectAll('circle')
         .data(data)
         .enter()
@@ -86,28 +100,67 @@ req.onload = () => {
             return yScale(new Date(d['Seconds'] * 1000))
         })
         .attr('fill', (d) => {
-            if (d['URL'] === "") {
-                return 'lightgreen'
+            if (d['Doping'] === "") {
+                return '#5A7302'
             } else {
-                return 'orange'
+                return '#F23827'
             }
         })
-        .on('mouseover', (d) => {
-            tooltip.transition()
+        .on('mouseover', (e, d) => {
+            tooltip
                 .style('visibility', 'visible')
-
-            if (d['Doping'] != "") {
-                tooltip.text(d['Year'] + ' - ' + d['Name'] + ' - ' + d['Time'] + ' - ' + d['Doping'])
-            } else {
-                tooltip.text(d['Year'] + ' - ' + d['Name'] + ' - ' + d['Time'] + ' - ' + 'No Allegations')
-            }
-
-            tooltip.attr('data-year', d['Year'])
+                .style('left', e.pageX + 'px')
+                .style('top', e.pageY - 80 + 'px')
+                .attr('data-xvalue', ['Year'])
+                .html(d['Name'] + '</br>' + d['Year'] + ' - ' + d['Time'] + '</br> ' + d['Doping'])
+                .attr('data-year', d['Year'])
         })
-        .on('mouseout', (d) => {
-            tooltip.transition()
-                .style('visibility', 'hidden')
+        .on("mousemove", function (e, d) {
+            tooltip.style("left", e.pageX + 10 + "px")
+
         })
+        .on('mouseout', (e, d) => {
+            tooltip.style('visibility', 'hidden')
+        });
+
+    let legendTable = d3.select('svg').append('g')
+        .attr("transform", "translate(0, " + padding + ")")
+        .attr("class", "legendTable");
+
+    let legend = legendTable.selectAll('.legend')
+        .data(a)
+        .enter().append('g')
+        .attr('id', 'legend')
+        .attr('class', 'legend')
+        .attr("transform", function (d, i) {
+            return "translate(0, " + i * 20 + ")"
+        })
+
+    legend.append('rect')
+        .attr('x', width - 10)
+        .attr('y', 4)
+        .attr('width', 10)
+        .attr('height', 10)
+        .style('fill', function (d) {
+            return d.color
+        });
+
+    legend.append('text')
+        .attr('x', width - 14)
+        .attr('y', 9)
+        .attr('dy', '.35em')
+        .style('text-anchor', 'end')
+        .text(d => d.doping);
+
+    svg.append("text")
+        .attr('id', 'title')
+        .attr("x", (width / 2 - 30))
+        .attr("y", padding)
+        .attr("text-anchor", "middle")
+        .style('fill', "#222326")
+        .style("font-size", "22px")
+        .text("Doping in Professional Bicycle Racing");
+
 
 
 }
